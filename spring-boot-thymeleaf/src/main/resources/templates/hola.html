@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
+
 <head>
-<meta charset="UTF-8" />
-<title th:text="${mensaje}">Insert title here</title>
+    <meta charset="UTF-8" />
+    <title th:text="${mensaje}">Insert title here</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
 </head>
+
 <body>
-	<h1 th:text="${mensaje}"></h1>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#">Spring Boot</a>
+        <button class="navbar-toggler" type="button">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container jumbotron">
+        <h1 th:text="${mensaje}"></h1>
+    </div>
+
 </body>
+
 </html>
