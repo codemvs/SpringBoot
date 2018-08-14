@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <title th:text="${mensaje}">Insert title here</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+    <link rel="stylesheet" th:href="@{/css/app.css}" />
 </head>
 
 <body>
@@ -22,8 +23,13 @@
     </nav>
     <div class="container jumbotron">
         <h1 th:text="${mensaje}"></h1>
+        <h2>Decorando estilos con css</h2>
     </div>
+    <footer>
+        <img th:src="@{/img/spring.png}" alt=""/> 
+         &copy; CODEMVS
 
+    </footer>
 </body>
 
 </html>
