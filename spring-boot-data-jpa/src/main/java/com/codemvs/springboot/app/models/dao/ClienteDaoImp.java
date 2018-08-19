@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.codemvs.springboot.app.models.entity.Cliente;
 //marca la clase como componente de persisntencia de accedo a datos
-@Repository
+@Repository("clienteDaoJPA")
 public class ClienteDaoImp implements IClienteDao {
 	//injecta al em segun la configuracion de persistencia
 	//que contiene el dataSource
