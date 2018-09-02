@@ -43,7 +43,7 @@ public class Cliente implements Serializable{
 	@Email
 	private String email;
 	
-	
+	@NotNull
 	@Column(name="create_at")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
