@@ -30,24 +30,28 @@
                     <td>Nombre:</td>
                     <td>
                         <input type="text" th:field="*{nombre}" class="form-control" />
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
                     </td>
                 </tr>
                 <tr>
-                    <td>Apellido:</td>
+                    <td>Apellido:</td> 
                     <td>
                         <input type="text" th:field="*{apellido}" class="form-control" />
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
                     </td>
                 </tr>
                 <tr>
                     <td>Email</td>
                     <td>
-                        <input type="email" th:field="*{email}" class="form-control" />
+                        <input type="text" th:field="*{email}" class="form-control" />
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
                     </td>
                 </tr>
                 <tr>
                     <td>Fecha</td>
                     <td>
                         <input type="text" th:field="*{createAt}" class="form-control" />
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></small>
                     </td>
                 </tr>
                 <tr>
