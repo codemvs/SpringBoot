@@ -4,9 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+
 
 import org.springframework.stereotype.Repository;
+
 
 import com.codemvs.springboot.app.models.entity.Cliente;
 //marca la clase como componente de persisntencia de accedo a datos
@@ -18,15 +19,21 @@ public class ClienteDaoImp implements IClienteDao {
 	private EntityManager em; //maneja las clases de entidades
 	
 	@SuppressWarnings("unchecked")
-	@Transactional()
+	
 	@Override
 	public List<Cliente> findAll() {
 		// TODO Auto-generated method stub
 		return em.createQuery("from Cliente").getResultList();
 	}
-
+	
 	@Override
-	@Transactional //lectura y escritura
+	
+	public Cliente findOne(Long id) {
+		// TODO Auto-generated method stub
+		return em.find(Cliente.class,id);
+	}
+	
+	@Override	
 	public void save(Cliente cliente) {
 		// TODO Auto-generated method stub
 		if(cliente.getId()!=null && cliente.getId()>0) {
@@ -38,10 +45,15 @@ public class ClienteDaoImp implements IClienteDao {
 		
 	}
 
-	@Override
-	public Cliente findOne(Long id) {
+	
+
+	@Override	
+	public void delete(Long id) {
 		// TODO Auto-generated method stub
-		return em.find(Cliente.class,id);
+		
+		
+		em.remove(findOne(id));		
+		
 	}
 
 }

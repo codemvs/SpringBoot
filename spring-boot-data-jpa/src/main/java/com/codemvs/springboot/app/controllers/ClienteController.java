@@ -17,19 +17,20 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.codemvs.springboot.app.models.dao.IClienteDao;
 import com.codemvs.springboot.app.models.entity.Cliente;
+import com.codemvs.springboot.app.service.IClienteService;
 
 @Controller
 @SessionAttributes("cliente")
 public class ClienteController {
 	//busca un componente registrado para ijectar
 	@Autowired
-	@Qualifier("clienteDaoJPA") //identificador de cliente impl para evitar ambiguedades
-	private IClienteDao clienteDao;
+	//@Qualifier("clienteDaoJPA") //identificador de cliente impl para evitar ambiguedades
+	private IClienteService clienteService;
 	
 	@RequestMapping(value="listar",method=RequestMethod.GET)
 	public String listar(Model model) {
 			model.addAttribute("titulo","Listado de Clientes");
-			model.addAttribute("clientes",clienteDao.findAll());
+			model.addAttribute("clientes",clienteService.findAll());
 			return "listar";
 	}
 	@RequestMapping(value="/form") //get
@@ -44,7 +45,7 @@ public class ClienteController {
 	public String editar(@PathVariable(value="id") Long id, Map<String, Object> model) {
 		Cliente cliente = null;
 		if(id>0) {
-			cliente = clienteDao.findOne(id);
+			cliente = clienteService.findOne(id);
 		}else {
 			return "redirect:/listar";
 		}
@@ -59,9 +60,16 @@ public class ClienteController {
 			model.addAttribute("titulo","Formulario Clientes");
 			return "form";
 		}
-		clienteDao.save(cliente);
+		clienteService.save(cliente);
 		status.setComplete(); // elimina el objeto cliente de la sesion
 		return "redirect:listar";
+	}
+	@RequestMapping(value="/eliminar/{id}")
+	public String eliminar(@PathVariable(value="id") Long id) {
+		if(id>0) {
+			clienteService.delete(id);
+		}
+		return "redirect:/listar";
 	}
 	
 }

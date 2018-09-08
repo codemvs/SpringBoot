@@ -22,7 +22,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
-@Table(name="clientes")
+@Table //(name="clientes")
 public class Cliente implements Serializable{
 	/**
 	 * 
