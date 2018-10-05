@@ -1,68 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://tymelaf.org">
 
-<head>
-    <meta charset="UTF-8" />
-    <title th:text="${mensaje}">Insert title here</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
-</head>
+<head th:replace="layout/layout::head"></head>
 
 <body>
+	<header th:replace="layout/layout::header"></header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="car-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<form th:action="@{/form}" th:object="${cliente}" method="POST">
+					<table class="table table-bordered">
 
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="#">Spring Boot</a>
-        <button class="navbar-toggler" type="button">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/listar}">Cliente</a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container jumbotron">
-        <h1 th:text="${titulo}" class="text-secondary border border-success border-top-0 border-left-0 border-right-0"></h1>
-        <form th:action="@{/form}" th:object="${cliente}" method="POST">
-            <table class="table table-bordered">
+						<tr>
+							<td>Nombre:</td>
+							<td><input type="text" th:field="*{nombre}"
+								class="form-control" /> <small class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+							</td>
+						</tr>
+						<tr>
+							<td>Apellido:</td>
+							<td><input type="text" th:field="*{apellido}"
+								class="form-control" /> <small class="form-text text-danger"
+								th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
+							</td>
+						</tr>
+						<tr>
+							<td>Email</td>
+							<td><input type="text" th:field="*{email}"
+								class="form-control" /> <small class="form-text text-danger"
+								th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+							</td>
+						</tr>
+						<tr>
+							<td>Fecha</td>
+							<td><input type="text" th:field="*{createAt}"
+								class="form-control" /> <small class="form-text text-danger"
+								th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></small>
+							</td>
+						</tr>
+						<tr>
+							<td><input type="submit" class="btn btn-primary"
+								value="Crear Cliente" /></td>
+						</tr>
+					</table>
+					<!-- <input type="hidden" th:field="*{id}" class="btn btn-primary"/>  -->
+				</form>
 
-                <tr>
-                    <td>Nombre:</td>
-                    <td>
-                        <input type="text" th:field="*{nombre}" class="form-control" />
-                        <small class="form-text text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Apellido:</td> 
-                    <td>
-                        <input type="text" th:field="*{apellido}" class="form-control" />
-                        <small class="form-text text-danger" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td>
-                        <input type="text" th:field="*{email}" class="form-control" />
-                        <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Fecha</td>
-                    <td>
-                        <input type="text" th:field="*{createAt}" class="form-control" />
-                        <small class="form-text text-danger" th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></small>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="submit" class="btn btn-primary" value="Crear Cliente" />
-                    </td>
-                </tr>
-            </table>
-            <!-- <input type="hidden" th:field="*{id}" class="btn btn-primary"/>  -->
-        </form>
-    </div>
+			</div>
+		</div>
+		<!-- card -->
+	</div>
+	<footer th:replace="layout/layout::footer"></footer>
 </body>
 
 </html>
