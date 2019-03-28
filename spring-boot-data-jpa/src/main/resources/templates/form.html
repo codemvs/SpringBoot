@@ -9,7 +9,7 @@
 		<div class="card bg-light">
 			<div class="car-header" th:text="${titulo}"></div>
 			<div class="card-body">
-				<form th:action="@{/form}" th:object="${cliente}" method="POST">
+				<form th:action="@{/form}" th:object="${cliente}" method="POST" enctype="multipart/form-data">
 					<table class="table table-bordered">
 
 						<tr>

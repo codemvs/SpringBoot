@@ -22,7 +22,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
-@Table //(name="clientes")
+@Table (name="clientes")
 public class Cliente implements Serializable{
 	/**
 	 * 
@@ -48,6 +48,8 @@ public class Cliente implements Serializable{
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date createAt;
+	
+	private String foto;
 	
 	//@PrePersist //se invoca antes de ejecutar una transaccion
 	//public void prePersist() {
