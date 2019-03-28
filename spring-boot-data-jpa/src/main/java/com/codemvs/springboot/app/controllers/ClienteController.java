@@ -1,9 +1,13 @@
 package com.codemvs.springboot.app.controllers;
 
 import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -32,6 +36,7 @@ import com.codemvs.springboot.app.models.entity.Cliente;
 import com.codemvs.springboot.app.service.IClienteService;
 import com.codemvs.springboot.app.util.paginator.PageRender;
 
+
 @Controller
 @SessionAttributes("cliente")
 public class ClienteController {
@@ -39,6 +44,8 @@ public class ClienteController {
 	@Autowired
 	//@Qualifier("clienteDaoJPA") //identificador de cliente impl para evitar ambiguedades
 	private IClienteService clienteService;
+	
+	private final Logger log = LoggerFactory.getLogger(getClass());
 	
 	@GetMapping(value="/ver/{id}")
 	public String ver(@PathVariable(value="id") Long id, Map<String, Object> model,RedirectAttributes flash) {
@@ -128,18 +135,30 @@ public class ClienteController {
 			return "form";
 		}
 		if(!foto.isEmpty()) {
+			
 			//Path directorioRecursos = Paths.get("src//main//resources//static/uploads");
 			//String rootPath = directorioRecursos.toFile().getAbsolutePath();
-			String rootPath = "C://Temp//uploads";
+			//String rootPath = "C://Temp//uploads";
+			
+			String uniqueFileName = UUID.randomUUID().toString()+"_"+foto.getOriginalFilename();
+			
+			Path rootPath = Paths.get("uploads").resolve(uniqueFileName);
+			
+			Path rootAbsolutePath = rootPath.toAbsolutePath();
+			
+			log.info("rootPath: "+rootPath);
+			log.info("rootAbsolutePath: "+rootAbsolutePath);
 			try {
-				byte[] bytes = foto.getBytes();
-				String nombreFoto = foto.getOriginalFilename();
-				Path rutaCompleta = Paths.get(rootPath+"//"+ nombreFoto);
 				
-				Files.write(rutaCompleta, bytes);
-				flash.addFlashAttribute("info","Has subido correctamente "+ nombreFoto);
+				/*byte[] bytes = foto.getBytes();				
+				Path rutaCompleta = Paths.get(rootPath+"//"+ nombreFoto);				
+				Files.write(rutaCompleta, bytes);*/
 				
-				cliente.setFoto(nombreFoto);
+				Files.copy(foto.getInputStream(),rootAbsolutePath);
+				
+				flash.addFlashAttribute("info","Has subido correctamente "+ uniqueFileName);
+				
+				cliente.setFoto(uniqueFileName);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
