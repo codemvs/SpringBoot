@@ -1,0 +1,16 @@
+@charset "ISO-8859-1";
+
+.alert{		
+	position:absolute;
+	z-index:1;
+	animation: fade-out 5s;
+	opacity:0;
+} 
+@keyframes fade-out {
+  from { 
+    opacity: 1; 
+  }
+  to { 
+    opacity: 0;
+  }
+}
