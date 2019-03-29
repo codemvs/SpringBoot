@@ -1,18 +1,11 @@
 package com.codemvs.springboot.app.controllers;
 
 import java.util.Map;
-import java.util.UUID;
-
 
 import javax.validation.Valid;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,31 +23,27 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import com.codemvs.springboot.app.models.dao.IClienteDao;
 import com.codemvs.springboot.app.models.entity.Cliente;
 import com.codemvs.springboot.app.service.IClienteService;
+import com.codemvs.springboot.app.service.IUploadFileService;
 import com.codemvs.springboot.app.util.paginator.PageRender;
 
 
 @Controller
 @SessionAttributes("cliente")
 public class ClienteController {
+	
 	//busca un componente registrado para ijectar
+	
 	@Autowired
 	//@Qualifier("clienteDaoJPA") //identificador de cliente impl para evitar ambiguedades
 	private IClienteService clienteService;
-	// Logg
-	private final Logger log = LoggerFactory.getLogger(getClass());
-	// Upload
-	private final static String UPLOADS_FOLDER = "uploads";
+	
+	@Autowired
+	private IUploadFileService uploadFileService;
+	
 	/**
 	 * Renderizar imagen de forma programatica
 	 * @param filename
@@ -62,16 +51,12 @@ public class ClienteController {
 	 */
 	@GetMapping(value="/uploads/{filename:.+}")
 	public ResponseEntity<Resource> verFoto(@PathVariable String filename){
-		Path pathFoto = Paths.get(UPLOADS_FOLDER).resolve(filename).toAbsolutePath();
-		log.info("::::pathFoto::: "+pathFoto);
-		Resource recurso = null;
+		
+		Resource recurso=null;
 		try {
-			recurso = (Resource) new UrlResource(pathFoto.toUri());
-			if(!recurso.exists() || !recurso.isReadable()) {
-				throw new RuntimeException("Error: No se puede cargar la imagen "+pathFoto.toString());
-			}
-			
-		}catch(MalformedURLException e) {
+			recurso = uploadFileService.load(filename);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -183,40 +168,20 @@ public class ClienteController {
 					cliente.getFoto().length() > 0 ) {
 				
 				//Eliminar foto al eliminar cliente
-				Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(cliente.getFoto()).toAbsolutePath();
-				File archivo = rootPath.toFile();
-				if(archivo.exists() && archivo.canRead() ) {
-					archivo.delete();
-				}
+				uploadFileService.delete(cliente.getFoto());
 			}
-			
-			//Path directorioRecursos = Paths.get("src//main//resources//static/uploads");
-			//String rootPath = directorioRecursos.toFile().getAbsolutePath();
-			//String rootPath = "C://Temp//uploads";
-			
-			String uniqueFileName = UUID.randomUUID().toString()+"_"+foto.getOriginalFilename();
-			
-			Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(uniqueFileName);
-			
-			Path rootAbsolutePath = rootPath.toAbsolutePath();
-			
-			log.info("rootPath: "+rootPath);
-			log.info("rootAbsolutePath: "+rootAbsolutePath);
+			// Mover imagen
+			String uniqueFileName=null;
 			try {
-				
-				/*byte[] bytes = foto.getBytes();				
-				Path rutaCompleta = Paths.get(rootPath+"//"+ nombreFoto);				
-				Files.write(rutaCompleta, bytes);*/
-				
-				Files.copy(foto.getInputStream(),rootAbsolutePath);
-				
-				flash.addFlashAttribute("info","Has subido correctamente "+ uniqueFileName);
-				
-				cliente.setFoto(uniqueFileName);
+				uniqueFileName = uploadFileService.copy(foto);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			flash.addFlashAttribute("info","Has subido correctamente "+ uniqueFileName);
+			
+			cliente.setFoto(uniqueFileName);
 			
 		}
 		String mensaje = (cliente.getId()!=null)?"Cliente editado con éxito!":"Cliente creado con éxito!";
@@ -242,13 +207,10 @@ public class ClienteController {
 			clienteService.delete(id);
 			
 			//Eliminar foto al eliminar cliente
-			Path rootPath = Paths.get( UPLOADS_FOLDER ).resolve( cliente.getFoto() ).toAbsolutePath();
-			File archivo = rootPath.toFile();
-			if(archivo.exists() && archivo.canRead() ) {
-				if(archivo.delete()) {
-					flash.addFlashAttribute("info","Foto "+cliente.getFoto()+" eliminar con éxito");
-				}
+			if(uploadFileService.delete(cliente.getFoto())) {
+				flash.addFlashAttribute("info","Foto "+cliente.getFoto()+" eliminar con éxito");
 			}
+			
 			
 		}
 		
