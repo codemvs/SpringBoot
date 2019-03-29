@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class MvcConfig extends WebMvcConfigurerAdapter{
 	
 	private final Logger log = LoggerFactory.getLogger(getClass());
-	
+	/* Se comenta este codigo para la practica de renderizado de imagen programaticamente.
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// TODO Auto-generated method stub
@@ -21,5 +21,5 @@ public class MvcConfig extends WebMvcConfigurerAdapter{
 		registry.addResourceHandler("/uploads/**")
 		.addResourceLocations(resourcePath);
 	}
-	
+	*/
 }
