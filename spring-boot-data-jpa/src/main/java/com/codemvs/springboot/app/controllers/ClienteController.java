@@ -31,6 +31,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -50,8 +51,10 @@ public class ClienteController {
 	@Autowired
 	//@Qualifier("clienteDaoJPA") //identificador de cliente impl para evitar ambiguedades
 	private IClienteService clienteService;
-	
+	// Logg
 	private final Logger log = LoggerFactory.getLogger(getClass());
+	// Upload
+	private final static String UPLOADS_FOLDER = "uploads";
 	/**
 	 * Renderizar imagen de forma programatica
 	 * @param filename
@@ -59,7 +62,7 @@ public class ClienteController {
 	 */
 	@GetMapping(value="/uploads/{filename:.+}")
 	public ResponseEntity<Resource> verFoto(@PathVariable String filename){
-		Path pathFoto = Paths.get("uploads").resolve(filename).toAbsolutePath();
+		Path pathFoto = Paths.get(UPLOADS_FOLDER).resolve(filename).toAbsolutePath();
 		log.info("::::pathFoto::: "+pathFoto);
 		Resource recurso = null;
 		try {
@@ -173,6 +176,19 @@ public class ClienteController {
 			return "form";
 		}
 		if(!foto.isEmpty()) {
+			//Eliminar foto al actualizar el usuario
+			if( cliente.getId() != null &&
+					cliente.getId() > 0 &&
+					cliente.getFoto() != null &&
+					cliente.getFoto().length() > 0 ) {
+				
+				//Eliminar foto al eliminar cliente
+				Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(cliente.getFoto()).toAbsolutePath();
+				File archivo = rootPath.toFile();
+				if(archivo.exists() && archivo.canRead() ) {
+					archivo.delete();
+				}
+			}
 			
 			//Path directorioRecursos = Paths.get("src//main//resources//static/uploads");
 			//String rootPath = directorioRecursos.toFile().getAbsolutePath();
@@ -180,7 +196,7 @@ public class ClienteController {
 			
 			String uniqueFileName = UUID.randomUUID().toString()+"_"+foto.getOriginalFilename();
 			
-			Path rootPath = Paths.get("uploads").resolve(uniqueFileName);
+			Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(uniqueFileName);
 			
 			Path rootAbsolutePath = rootPath.toAbsolutePath();
 			
@@ -219,8 +235,21 @@ public class ClienteController {
 	@RequestMapping(value="/eliminar/{id}")
 	public String eliminar(@PathVariable(value="id") Long id, RedirectAttributes flash) {
 		if(id>0) {
+			 
+			Cliente cliente = clienteService.findOne(id);
+			
 			flash.addFlashAttribute("success","Cliente ha eliminado con éxito"); // mensajes flash
 			clienteService.delete(id);
+			
+			//Eliminar foto al eliminar cliente
+			Path rootPath = Paths.get( UPLOADS_FOLDER ).resolve( cliente.getFoto() ).toAbsolutePath();
+			File archivo = rootPath.toFile();
+			if(archivo.exists() && archivo.canRead() ) {
+				if(archivo.delete()) {
+					flash.addFlashAttribute("info","Foto "+cliente.getFoto()+" eliminar con éxito");
+				}
+			}
+			
 		}
 		
 		return "redirect:/listar";
