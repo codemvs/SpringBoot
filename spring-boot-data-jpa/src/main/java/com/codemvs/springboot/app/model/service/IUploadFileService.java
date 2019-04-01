@@ -1,4 +1,4 @@
-package com.codemvs.springboot.app.service;
+package com.codemvs.springboot.app.model.service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

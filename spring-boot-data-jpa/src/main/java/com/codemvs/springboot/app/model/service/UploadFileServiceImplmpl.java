@@ -1,4 +1,4 @@
-package com.codemvs.springboot.app.service;
+package com.codemvs.springboot.app.model.service;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.codemvs.springboot.app.service;
+package com.codemvs.springboot.app.model.service;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
