@@ -1,15 +1,20 @@
 package com.codemvs.springboot.app.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,13 +40,25 @@ public class Factura implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY) // Realiza la consulta a medida que se requiere
 	private Cliente cliente;
 	
+	// Una factura y muchos item-factura
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	
+	// Indicar que la realacion es de un solo sentido
+	@JoinColumn(name="factura_id") // Llave foranea
+	private List<ItemFactura> items;
+	
+	public Factura() {
+		this.items = new ArrayList<ItemFactura>();
+	}
+
+
 	@PrePersist
 	public void prePersist() {
 		// Se encarga de generar la fecha
 		createAt = new Date();
 	}
 	
+
 	public Long getId() {
 		return id;
 	}
@@ -71,6 +88,19 @@ public class Factura implements Serializable{
 	}
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	
+	
+	public List<ItemFactura> getItems() {
+		return items;
+	}
+
+	public void setItems(List<ItemFactura> items) {
+		this.items = items;
+	}
+
+	public void addIntemFacturas( ItemFactura item) {
+		this.items.add(item);
 	}
 	
 	private static final long serialVersionUID=1L;
