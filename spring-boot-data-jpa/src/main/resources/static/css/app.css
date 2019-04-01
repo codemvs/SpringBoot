@@ -1,10 +1,12 @@
 @charset "ISO-8859-1";
 
 .alert{		
-	position:absolute;
+	position:fixed;
 	z-index:1;
-	animation: fade-out 5s;
+	animation: fade-out 15s;
 	opacity:0;
+	left: 68.5%;
+	top: 5%;
 } 
 @keyframes fade-out {
   from { 
