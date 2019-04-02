@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html xmlns:ht="http://www.thymeleaf.org">
-</head>
+<html xmlns:th="http://tymelaf.org">
 <body>
 
 <script type="text/javascript" th:fragment="javascript">
 $(document).ready(function(){
 	$("#buscar_producto").autocomplete({
 		source:function( req, res){
+			console.log("sas");
 			$.ajax({
-				url:"/factura/cargar-productos/"+ req.term,
-				dataType:"jason",
-				data:{
-					term:req.term
+				url : "/factura/cargar-productos/" + req.term,
+				dataType : "json",
+				data : {
+					term : req.term
 				},
-				success:function(data){
-					res($.map(data,function(item){
-						return { 
-							value:item.id,
-							label:item.nombre,
-							precio:item.precio
-							}
+				success : function(data) {
+					res($.map(data, function(item) {
+						return {
+							value : item.id,
+							label : item.nombre,
+							precio : item.precio,
+						};
 					}));
-				}
+				},
 			});
 		},
 		select:function(event, ui){
