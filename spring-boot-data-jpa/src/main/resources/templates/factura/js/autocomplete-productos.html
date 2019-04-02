@@ -25,20 +25,53 @@ $(document).ready(function(){
 			});
 		},
 		select:function(event, ui){
-			$("#buscar_producto").val("");
+			
+			var value = ui.item.value;
+			var label = ui.item.label;
+			var precio = ui.item.precio;
 			
 			var linea = $("#plantillaItemsFactura").html();
 			
-			linea = linea.replace(/{ID}/g, ui.item.value);
-			linea = linea.replace(/{NOMBRE}/g, ui.item.label);
-			linea = linea.replace(/{PRECIO}/g, ui.item.precio);
+			$("#buscar_producto").val("");
+			
+			if( itemsHelper.hasProducto(value) ){
+				itemsHelper.incrementaCantidad( value, precio );
+				return false;
+			}
+			
+			linea = linea.replace(/{ID}/g, value);
+			linea = linea.replace(/{NOMBRE}/g, label);
+			linea = linea.replace(/{PRECIO}/g, precio);
 			
 			$("#cargarItemProductos tbody").append(linea);
-			
+			itemsHelper.calcularImporte(value, precio, 1)
 			return false;
 		}
 	});
 });
+
+var itemsHelper = itemsHelper || {
+	calcularImporte:function(id, precio, cantidad){
+		 var total = parseInt(precio)*parseInt(cantidad);
+		$("#total_importe_"+id).html(total);
+	},
+	hasProducto:function(id){
+		var result=false;
+		$('input[name="item_id[]"]').each(function(){
+			if( parseInt(id) == parseInt($(this).val()) ){
+				result = true;
+			}
+		});
+		
+		return result;
+	},
+	incrementaCantidad: function(id, precio){
+		var cantidad = $("#cantidad_"+id).val() ? parseInt($("#cantidad_"+id).val()) : 0;
+		$("#cantidad_"+id).val(++cantidad);
+		this.calcularImporte(id,precio,cantidad);
+		
+	}
+}
 </script>
 </body>
 </html>
