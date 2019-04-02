@@ -14,6 +14,10 @@
 				<form th:action="@{/factura/form/}" th:object="${factura}"
 					method="post">
 					
+					<h4 class="card-title">
+						<a class="btn btn-default btn-xs" th:href="@{'/ver/'+${factura.cliente.id}}" th:text="'&laquo; volver'"></a>
+					</h4>
+					
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label" th:text="Descripción"></label>
 						<div class="col-sm-6">
