@@ -99,7 +99,7 @@ public class Factura implements Serializable{
 		this.items = items;
 	}
 
-	public void addIntemFacturas( ItemFactura item) {
+	public void addItemFactura( ItemFactura item) {
 		this.items.add(item);
 	}
 	
